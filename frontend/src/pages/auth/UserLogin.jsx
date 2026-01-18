@@ -3,17 +3,16 @@ import { useNavigate } from "react-router-dom";
 import { IoEyeOutline, IoEye } from "react-icons/io5";
 import axios from "axios";
 import { signInWithPopup } from "firebase/auth";
-import { auth, provider } from "../../utils/Firebase";
-import { authDataContext } from "../context/authContext";
-import { userDataContext } from "../context/UserContext";
-import Loading from "../component/Loading";
-import Logo from "../assets/logo.png";
-import google from "../assets/google.png";
-import { toast } from "react-toastify";
+import { auth, provider } from "../../../utils/Firebase";
+import { authDataContext } from "../../context/authContext";
+import { userDataContext } from "../../context/UserContext";
+import Loading from "../../component/Loading";
+import Logo from "../../assets/logo.png";
+import google from "../../assets/google.png";
 
-function Registration() {
+
+function UserLogin() {
   const [show, setShow] = useState(false);
-  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -23,30 +22,25 @@ function Registration() {
 
   const navigate = useNavigate();
 
-  const handleSignup = async (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
-
     try {
       const res = await axios.post(
-        `${serverUrl}/api/auth/registration`,
-        { name, email, password },
+        `${serverUrl}/api/auth/login`,
+        { email, password },
         { withCredentials: true }
       );
-
       console.log(res.data);
       getCurrentUser();
       navigate("/");
-      toast.success("User Registration Successful");
     } catch (err) {
       console.log(err);
-      toast.error("User Registration Failed");
     }
-
     setLoading(false);
   };
 
-  const googleSignup = async () => {
+  const googlelogin = async () => {
     try {
       const response = await signInWithPopup(auth, provider);
       const user = response.user;
@@ -62,10 +56,8 @@ function Registration() {
       console.log(result.data);
       getCurrentUser();
       navigate("/");
-      toast.success("User Registration Successful");
     } catch (error) {
       console.log(error);
-      toast.error("User Registration Failed");
     }
   };
 
@@ -80,20 +72,20 @@ function Registration() {
       </header>
 
       <div className="mt-6 text-center">
-        <h2 className="text-3xl font-bold">Create Your Account</h2>
+        <h2 className="text-3xl font-bold">Login</h2>
         <p className="text-sm mt-1 text-gray-300">
-          Join us and start your journey
+          Welcome back — let's get you inside
         </p>
       </div>
 
       <div className="mt-8 w-[90%] max-w-[420px] bg-[#ffffff0f] border border-[#ffffff25] backdrop-blur-lg rounded-xl p-8 shadow-xl">
-        <form onSubmit={handleSignup} className="flex flex-col gap-5">
-          {/* Google Signup */}
+        <form onSubmit={handleLogin} className="flex flex-col gap-5">
+          {/* Google Login */}
           <div
             className="w-full h-[50px] bg-[#2c3e42] hover:bg-[#3a4f54] duration-200 rounded-lg flex items-center justify-center gap-3 cursor-pointer font-medium"
-            onClick={googleSignup}
+            onClick={googlelogin}
           >
-            <img src={google} alt="Google" className="w-5" /> Sign up with Google
+            <img src={google} alt="Google" className="w-5" /> Sign in with Google
           </div>
 
           {/* Divider */}
@@ -104,15 +96,6 @@ function Registration() {
           </div>
 
           {/* Inputs */}
-          <input
-            type="text"
-            placeholder="Username"
-            required
-            className="w-full h-[50px] px-4 bg-transparent border border-[#ffffff35] rounded-lg text-white placeholder-gray-300 focus:border-[#6d9ee8] duration-200 outline-none"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-
           <input
             type="text"
             placeholder="Email"
@@ -139,19 +122,19 @@ function Registration() {
             </div>
           </div>
 
-          {/* Signup button */}
+          {/* Login button */}
           <button className="w-full h-[50px] mt-2 bg-[#5468ff] hover:bg-[#6a7aff] duration-200 rounded-lg text-lg font-semibold flex items-center justify-center">
-            {loading ? <Loading /> : "Create Account"}
+            {loading ? <Loading /> : "Login"}
           </button>
 
-          {/* Login redirect */}
+          {/* Signup redirect */}
           <p className="text-sm text-gray-300 text-center mt-2">
-            Already have an account?{' '}
+            Don't have an account?{' '}
             <span
               className="text-[#7aa5ff] font-semibold cursor-pointer hover:underline"
-              onClick={() => navigate("/login")}
+              onClick={() => navigate("/signup")}
             >
-              Login
+              Create one
             </span>
           </p>
         </form>
@@ -160,4 +143,4 @@ function Registration() {
   );
 }
 
-export default Registration;
+export default UserLogin;

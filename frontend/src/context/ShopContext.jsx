@@ -140,8 +140,10 @@ function ShopContext({children}) {
     },[])
 
     useEffect(() => {
-    getUserCart()
-  },[])
+  if (document.cookie.includes("token")) {
+    getCart();
+  }
+}, []);
 
 
 
