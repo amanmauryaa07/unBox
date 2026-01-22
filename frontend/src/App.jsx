@@ -1,71 +1,29 @@
-import React, { useCallback, useContext } from 'react'
-import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
-import Home from './pages/Home'
-import UserLogin from "./pages/auth/UserLogin";
-import Register from "./pages/auth/Register";
-import Nav from './component/Nav'
-import { userDataContext } from './context/UserContext'
-import About from './pages/About'
-import Collections from './pages/Collections'
-import Product from './pages/Product'
-import Contact from './pages/Contact'
-import ProductDetail from './pages/ProductDetail'
-import Cart from './pages/Cart'
-import PlaceOrder from './pages/PlaceOrder'
-import Order from './pages/Order'
-import { ToastContainer } from 'react-toastify';
-import NotFound from './pages/NotFound'
-import Ai from './component/Ai'
+import { Routes, Route, Navigate } from "react-router-dom";
+import Home from "./pages/Home";
+import AddProduct from "./pages/AddProduct";
+import ProductList from "./pages/ProductList";
+import Orders from "./pages/Orders";
+import AdminLogin from "./pages/AdminLogin";
+
 function App() {
-let {userData} = useContext(userDataContext)
-let location = useLocation()
-  
+  const isAdmin = true; // baad me admin auth se replace kar dena
+
   return (
-    <>
-    <ToastContainer />
-    {userData && <Nav/>}
-      <Routes>
+    <Routes>
+      <Route path="/login" element={<AdminLogin />} />
 
-        <Route path='/login' 
-        element={userData ? (<Navigate to={location.state?.from || "/"}/> ) 
-        : (<UserLogin/>)
-          }/>
-
-        <Route path='/signup' 
-        element={userData ? (<Navigate to={location.state?.from || "/"}/> ) 
-        : (<Register/>)
-        }/>
-
-        <Route path='/' 
-        element={userData ? <Home/> : <Navigate to="/login" state={{from: location.pathname}} /> }/>
-      
-        <Route path='/about' 
-        element={userData ? <About/> : <Navigate to="/login" state={{from: location.pathname}} /> }/>
-
-        <Route path='/collection' 
-        element={userData ? <Collections/> : <Navigate to="/login" state={{from: location.pathname}} /> }/>
-
-        <Route path='/product' 
-        element={userData ? <Product/> : <Navigate to="/login" state={{from: location.pathname}} /> }/>
-
-        <Route path='/contact' 
-        element={userData ? <Contact/> : <Navigate to="/login" state={{from: location.pathname}} /> }/>
-        <Route path='/productdetail/:productId' 
-        element={userData ? <ProductDetail/> : <Navigate to="/login" state={{from: location.pathname}} /> }/>
-
-        <Route path='/cart' 
-        element={userData ? <Cart/> : <Navigate to="/login" state={{from: location.pathname}} /> }/>
-
-          <Route path='/placeorder' 
-        element={userData ? <PlaceOrder/> : <Navigate to="/login" state={{from: location.pathname}} /> }/>
-         <Route path='/order' 
-        element={userData ? <Order/> : <Navigate to="/login" state={{from: location.pathname}} /> }/>
-
-        <Route path='*' element={<NotFound/>}/>
-      </Routes>
-      <Ai/>
-    </>
-  )
+      {isAdmin ? (
+        <>
+          <Route path="/" element={<Home />} />
+          <Route path="/add-product" element={<AddProduct />} />
+          <Route path="/products" element={<ProductList />} />
+          <Route path="/orders" element={<Orders />} />
+        </>
+      ) : (
+        <Route path="*" element={<Navigate to="/login" />} />
+      )}
+    </Routes>
+  );
 }
 
-export default App
+export default App;
