@@ -141,7 +141,7 @@ function ShopContext({children}) {
 
     useEffect(() => {
   if (document.cookie.includes("token")) {
-    getCart();
+    getUserCart();
   }
 }, []);
 
